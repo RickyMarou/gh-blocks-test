@@ -16,5 +16,14 @@
     "entry": "blocks/example-folder-block.tsx",
     "matches": ["*"],
     "example_path": "https://github.com/githubocto/flat"
+  },
+  {
+    "type": "folder",
+    "id": "http-header-debug",
+    "title": "Debug b3 http header",
+    "description": "Check what's the status of b3 header",
+    "entry": "blocks/folder-debug-http-header.tsx",
+    "matches": ["*"],
+    "example_path": "https://github.com/githubocto/flat"
   }
 ]
