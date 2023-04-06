@@ -27,12 +27,12 @@
     "example_path": "https://github.com/githubocto/flat"
   },
   {
-    "type": "folder",
+    "type": "file",
     "id": "edit-json-file",
     "title": "Edit a JSON File",
     "description": "Edit a JSON file",
     "entry": "blocks/edit-json-file.tsx",
-    "matches": ["*"],
+    "matches": ["*.json", "*.JSON"],
     "example_path": "https://github.com/LearnWebCode/json-example/blob/master/animals-1.json"
   }
 ]
