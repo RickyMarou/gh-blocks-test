@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@githubnext/blocks": "^2.3.5",
+    "just-clone": "^6.2.0",
+    "just-safe-set": "^4.2.1",
     "randomcolor": "^0.6.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0"

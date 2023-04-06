@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { FolderBlockProps, getLanguageFromFilename } from "@githubnext/blocks";
+import { FileBlockProps, getLanguageFromFilename } from "@githubnext/blocks";
 import {
   Box,
   Button,
@@ -10,9 +10,11 @@ import {
   Text,
   TextInput,
 } from "@primer/react";
+import set from "just-safe-set";
+import clone from "just-clone";
 import randomColor from "randomcolor";
 
-export default function EditJSONFile(props: FolderBlockProps) {
+export default function EditJSONFile(props: FileBlockProps) {
   const {
     content,
     context,
@@ -23,12 +25,21 @@ export default function EditJSONFile(props: FolderBlockProps) {
   } = props;
 
   const language = getLanguageFromFilename(context.path.split("/").pop() || "");
-  let fileContent;
+  let fileContent = {};
   try {
     fileContent = JSON.parse(content);
   } catch (error) {}
 
-  console.log({ fileContent });
+  const updateValue = useCallback(
+    (jsonPath: string, value: string) => {
+      const newContent = clone(fileContent);
+      set(newContent, jsonPath, value);
+      console.log({ newContent });
+      const newContentString = JSON.stringify(newContent, null, 2);
+      onUpdateContent(newContentString);
+    },
+    [onUpdateContent, fileContent]
+  );
 
   return (
     <Box p={4}>
@@ -49,22 +60,27 @@ export default function EditJSONFile(props: FolderBlockProps) {
           Edit JSON File
         </Box>
         <Box p={4}>
-          {(language !== "JSON" || !fileContent) && (
+          {(language !== "JSON" || !Object.keys(fileContent).length) && (
             <Flash variant="danger">Error parsing JSON</Flash>
           )}
-          <RenderJSON fileContent={fileContent} />
+          <RenderJSON
+            jsonPath=""
+            fileContent={fileContent}
+            updateContent={updateValue}
+          />
         </Box>
       </Box>
     </Box>
   );
 }
 
-function RenderJSON({ fileContent }) {
+function RenderJSON({ fileContent, updateContent, jsonPath }) {
   return (
     <div>
       {Object.entries(fileContent).map((jsonEntry, i) => {
         const key = jsonEntry[0];
         const value = jsonEntry[1];
+        const currentJsonPath = `${jsonPath ? jsonPath + "." : ""}${key}`;
 
         if (typeof value === "string") {
           // stop case
@@ -73,7 +89,13 @@ function RenderJSON({ fileContent }) {
               <FormControl.Label sx={{ alignSelf: "center", flex: "0.2" }}>
                 {key}
               </FormControl.Label>
-              <TextInput sx={{ flex: "1" }} value={value} />
+              <TextInput
+                sx={{ flex: "1" }}
+                value={value}
+                onChange={(e) => {
+                  updateContent(currentJsonPath, e.target.value);
+                }}
+              />
             </FormControl>
           );
         } else {
@@ -91,7 +113,11 @@ function RenderJSON({ fileContent }) {
               marginTop={2}
             >
               <Box paddingBottom={2}>{key}</Box>
-              <RenderJSON fileContent={value} />
+              <RenderJSON
+                fileContent={value}
+                jsonPath={currentJsonPath}
+                updateContent={updateContent}
+              />
             </Box>
           );
         }
