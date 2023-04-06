@@ -25,5 +25,14 @@
     "entry": "blocks/folder-debug-http-header.tsx",
     "matches": ["*"],
     "example_path": "https://github.com/githubocto/flat"
+  },
+  {
+    "type": "folder",
+    "id": "edit-json-file",
+    "title": "Edit a JSON File",
+    "description": "Edit a JSON file",
+    "entry": "blocks/edit-json-file.tsx",
+    "matches": ["*"],
+    "example_path": "https://github.com/LearnWebCode/json-example/blob/master/animals-1.json"
   }
 ]
